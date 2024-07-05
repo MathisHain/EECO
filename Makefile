@@ -1,2 +1,2 @@
 all:
-	matlab -nodisplay -nosplash -nodesktop -r "run('EnsembleRun.m'); exit;"
+	matlab -nodisplay -nosplash -nodesktop -r "try, run('EnsembleRun.m'); catch, end, exit"
