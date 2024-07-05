@@ -1,4 +1,4 @@
-function steadystate = boxmodel4_function(Npaz)
+function steadystate = boxmodel4_function(Npaz,ALKmean)
 
 %%%%%%%     MODEL MAIN TEMPLATE    %%%%%%%
 %==============================================
@@ -17,9 +17,9 @@ NO3_ll_ini = 5*10^-6;%(mol/kg)
 NO3_hl_ini = Npaz;%25*10^-6;%(mol/kg)
 NO3_d_ini  = 34.7*10^-6;%(mol/kg)
 NO3_a_ini  = 0.0;   
-global ALK_l ALK_h
-ALK_l   = 2322*10^-6; %Low latitude alkalinity [mol/kg] - 2322*10^-6
-ALK_h   = 2322*10^-6; %high latitude alkalinity [mol/kg] - 2322*10^-6
+%global ALK_l ALK_h
+%ALK_l   = 2322*10^-6; %Low latitude alkalinity [mol/kg] - 2322*10^-6
+%ALK_h   = 2322*10^-6; %high latitude alkalinity [mol/kg] - 2322*10^-6
 
 d15N_ll_ini        = 5.4; % d15N for delta values
 d15N_hl_ini        = 5.4;
@@ -34,18 +34,18 @@ N15_a_ini          =((((d15N_a_ini)/1000)+1)*R15ref)*NO3_a_ini;
 
 x0 = [PO4_ll_ini, PO4_hl_ini, PO4_d_ini, PO4_a_ini, DIC_ll_ini, DIC_hl_ini,DIC_D_ini,pCO2_a_ini,NO3_ll_ini,NO3_hl_ini,NO3_d_ini,NO3_a_ini,N15_ll_ini,N15_hl_ini,N15_d_ini,N15_a_ini];
 
-tspan = (0:1:5000); %1000 years of simulation
+% need to keep track of ALK also as a dynamic state ariable
+ALK_ll_ini = ALKmean;
+ALK_hl_ini = ALKmean;
+ALK_d_ini  = ALKmean;
+x0 = [x0 [ALK_ll_ini, ALK_hl_ini, ALK_d_ini]]; % appending ALK as separate state variables to initial state vector
+
+
 %=================
 %SOLVING THE ODE
 %=================
-
-
+	tspan = (0:1:5000); %1000 years of simulation
     [t,x] = ode45(@CO2atm_ode,tspan,x0,[]);
-    d15N=zeros(length(tspan),3);
-    d15N(:,1)     = (((x(:,13)./x(:,9))./R15ref)-1)*1000;
-    d15N(:,2)     = (((x(:,14)./x(:,10))./R15ref)-1)*1000;
-    d15N(:,3)     = (((x(:,15)./x(:,11))./R15ref)-1)*1000;
-
 	steadystate = x(end,:)
 
 end

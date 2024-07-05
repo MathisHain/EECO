@@ -21,7 +21,7 @@ V_a     =1.773*10^20;                % Mass of atmospheric box [mol]
 KE_l    = 0.99;
 KE_h    = 0.2;
 
-global ALK_l ALK_h
+%global ALK_l ALK_h
 temp_l  = 273.15+15; %Low latitude temperature [K] %%+15
 temp_h  = 273.15+2; %High latitude temperature [K] %%2.0
 salinity_l = 34.0; %low latitude salinity [g/Kg]
@@ -43,15 +43,15 @@ Kwind=2/3600/24 ; % [m/s] piston velocity for air seas gas exchange///correspond
 % DEFINE YOUR SYSTEM
 %================
 
-dx=zeros(16,1);
+dx=zeros(19,1);
 dx(1)=(-T/V_l)*x(1)+(T-KE_l*T)/V_l*x(3);
 dx(2)=(T-KE_h*T)/V_h*x(1)+(-T-M)/V_h*x(2)+(M-KE_h*M)/V_h*x(3);
 dx(3)=T/V_d*KE_h*x(1)+(T+M)/V_d*x(2)+(-M+KE_h*M+KE_l*T)/V_d*x(3);
 dx(4)=0;
-dx(5)=T/V_l*x(7)-T/V_l*x(5)-T/V_l*KE_l*Rcp*x(3)-(co2_flux(Kwind, temp_l, salinity_l,x(5), ALK_l, x(8))*area_l)*(60*60*24*365)/V_l;
-dx(6)=T/V_h*x(5)-T/V_h*x(6)+M/V_h*x(7)-M/V_h*x(6)-T/V_h*KE_h*Rcp*x(1)-M/V_h*KE_h*Rcp*x(3)-(co2_flux(Kwind, temp_h, salinity_h,x(6), ALK_h, x(8))*area_h)*(60*60*24*365)/V_h;
+dx(5)=T/V_l*x(7)-T/V_l*x(5)-T/V_l*KE_l*Rcp*x(3)-(co2_flux(Kwind, temp_l, salinity_l,x(5), x(17), x(8))*area_l)*(60*60*24*365)/V_l;
+dx(6)=T/V_h*x(5)-T/V_h*x(6)+M/V_h*x(7)-M/V_h*x(6)-T/V_h*KE_h*Rcp*x(1)-M/V_h*KE_h*Rcp*x(3)-(co2_flux(Kwind, temp_h, salinity_h,x(6), x(18), x(8))*area_h)*(60*60*24*365)/V_h;
 dx(7)=T/V_d*x(6)-T/V_d*x(7)+M/V_d*x(6)-M/V_d*x(7)+T/V_d*KE_l*Rcp*x(3)+T/V_d*KE_h*Rcp*x(1)+M/V_d*KE_h*Rcp*x(3);
-dx(8)=((co2_flux(Kwind, temp_l, salinity_l,x(5), ALK_l, x(8)))*area_l)*(60*60*24*365)/V_a + ((co2_flux(Kwind, temp_h, salinity_h, x(6), ALK_h, x(8)))*area_h)*(60*60*24*365)/V_a;
+dx(8)=((co2_flux(Kwind, temp_l, salinity_l,x(5), x(17), x(8)))*area_l)*(60*60*24*365)/V_a + ((co2_flux(Kwind, temp_h, salinity_h, x(6), x(18), x(8)))*area_h)*(60*60*24*365)/V_a;
 dx(9)=T/V_l*x(11)-T/V_l*x(9)-T/V_l*KE_l*Rnp*x(3);
 dx(10)=T/V_h*x(9)-T/V_h*x(10)+M/V_h*x(11)-M/V_h*x(10)-T/V_h*KE_h*Rnp*x(1)-M/V_h*KE_h*Rnp*x(3);
 dx(11)=T/V_d*x(10)-T/V_d*x(11)+M/V_d*x(10)-M/V_d*x(11)+T/V_d*KE_l*Rnp*x(3)+T/V_d*KE_h*Rnp*x(1)+M/V_d*KE_h*Rnp*x(3);
@@ -60,6 +60,10 @@ dx(13)=T/V_l*x(15)-T/V_l*x(13)-T/V_l*KE_l*Rnp*x(3)*x(15)/x(11)*(1-(1-KE_l)^(1-(e
 dx(14)=T/V_h*x(13)-T/V_h*x(14)+M/V_h*x(15)-M/V_h*x(14)-T/V_h*KE_h*Rnp*x(1)*x(13)/x(9)*(1-(1-KE_h)^(1-(eps)/1000))/KE_h-M/V_h*KE_h*Rnp*x(3)*x(15)/x(11)*(1-(1-KE_h)^(1-(eps)/1000))/KE_h;
 dx(15)=T/V_d*x(14)-T/V_d*x(15)+M/V_d*x(14)-M/V_d*x(15)+T/V_d*KE_l*Rnp*x(3)*x(15)/x(11)*(1-(1-KE_l)^(1-(eps)/1000))/KE_l+T/V_d*KE_h*Rnp*x(1)*x(13)/x(9)*(1-(1-KE_h)^(1-(eps)/1000))/KE_h+M/V_d*KE_h*Rnp*x(3)*x(15)/x(11)*(1-(1-KE_h)^(1-(eps)/1000))/KE_h;
 dx(16)=0;
+
+dx(17)=0; % needs CaCO3 and OM-acidity export fluxes
+dx(18)=0; % needs M-acidity export fluxe
+dx(19)=0; % needs dissolution/respiration
 
 end 
 
