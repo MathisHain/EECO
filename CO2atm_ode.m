@@ -38,6 +38,8 @@ eps = 5.5; %isotope effect for nitrate assimilation
 
 Kwind=2/3600/24 ; % [m/s] piston velocity for air seas gas exchange///corresponding to 8.3 cm hr-1 (relatively close to 10cm hr-1 given in the Sarmiento&Gruber's book but depending on wind speed 
 
+%[H, pH, pCO2, H2CO2, HCO3, CO3, Ozd, CSH] = carb_solver(5+273.15,34.7,x(7), x(19), 4000) %deep ocean carbonate chemistry
+
 
 %================
 % DEFINE YOUR SYSTEM
@@ -61,9 +63,17 @@ dx(14)=T/V_h*x(13)-T/V_h*x(14)+M/V_h*x(15)-M/V_h*x(14)-T/V_h*KE_h*Rnp*x(1)*x(13)
 dx(15)=T/V_d*x(14)-T/V_d*x(15)+M/V_d*x(14)-M/V_d*x(15)+T/V_d*KE_l*Rnp*x(3)*x(15)/x(11)*(1-(1-KE_l)^(1-(eps)/1000))/KE_l+T/V_d*KE_h*Rnp*x(1)*x(13)/x(9)*(1-(1-KE_h)^(1-(eps)/1000))/KE_h+M/V_d*KE_h*Rnp*x(3)*x(15)/x(11)*(1-(1-KE_h)^(1-(eps)/1000))/KE_h;
 dx(16)=0;
 
-dx(17)=0; % needs CaCO3 and OM-acidity export fluxes
-dx(18)=0; % needs M-acidity export fluxe
-dx(19)=0; % needs dissolution/respiration
+dx(17)=(T)/V_l*x(19)-(T)/V_l*x(17); % needs CaCO3 and OM-acidity export fluxes
+dx(18)=(T)/V_h*x(17)+(M)/V_h*x(19)-(T+M)/V_h*x(18); % needs M-acidity export fluxe
+dx(19)=(T+M)/V_d*x(18)-(T+M)/V_d*x(19); % needs dissolution/respiration
+
+dx(20)=0; % set LL surf temp
+dx(21)=0; % set HL surf temp
+dx(22)=(T+M)/V_d*x(21)-(T+M)/V_d*x(22); %needs checking
+
+dx(23)=0; % set LL surf Sal
+dx(24)=0; % set LL surf Sal
+dx(25)=(T+M)/V_d*x(24)-(T+M)/V_d*x(25); % set LL surf Sal
 
 end 
 

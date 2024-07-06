@@ -16,7 +16,7 @@ pCO2_a_ini = 280*10^-6 ;%(atm))
 NO3_ll_ini = 5*10^-6;%(mol/kg)
 NO3_hl_ini = Npaz;%25*10^-6;%(mol/kg)
 NO3_d_ini  = 34.7*10^-6;%(mol/kg)
-NO3_a_ini  = 0.0;   
+NO3_a_ini  = 0.0;  
 %global ALK_l ALK_h
 %ALK_l   = 2322*10^-6; %Low latitude alkalinity [mol/kg] - 2322*10^-6
 %ALK_h   = 2322*10^-6; %high latitude alkalinity [mol/kg] - 2322*10^-6
@@ -39,6 +39,8 @@ ALK_ll_ini = ALKmean;
 ALK_hl_ini = ALKmean;
 ALK_d_ini  = ALKmean;
 x0 = [x0 [ALK_ll_ini, ALK_hl_ini, ALK_d_ini]]; % appending ALK as separate state variables to initial state vector
+x0 = [x0 [25, 0, 5]]; % appending T as separate state variables to initial state vector
+x0 = [x0 [35, 34.7, 34.7]]; % appending Sal as separate state variables to initial state vector
 
 
 %=================
