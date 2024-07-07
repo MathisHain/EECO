@@ -1,4 +1,4 @@
-function [H, pH, pCO2, H2CO3, HCO3, CO3, Ozd, CSH] = carb_solver(T,S,DIC, ALK, Depth)
+function [H, pH, pCO2, H2CO3, HCO3, CO3, Ozd, CSH] = carb_solver(T,S,DIC, ALK, Depth,wK)
 
 %Calculate the pco2 flux between the atmosphere and the surface ocean from
 %Temperature, salinity, DIC, Alkalinity of the ocean and the pco2 of the
@@ -13,9 +13,9 @@ function [H, pH, pCO2, H2CO3, HCO3, CO3, Ozd, CSH] = carb_solver(T,S,DIC, ALK, D
 %ALK[mole/kg] - Ocean Alkalinity
 %pco2_a[ppm] - Atmopheric pCO2
 
-period = 1; % 1 for today and 0 for Eocene
+%period = 1; % 1 for today and 0 for Eocene
 
- if period ==1
+if wK == 'modern'
  	Ca= 0.0102821; Mg = 0.0528171;
 
 %{
@@ -71,9 +71,9 @@ period = 1; % 1 for today and 0 for Eocene
 
     Kb = exp(148.0248+137.1942*S^(1/2)+1.62142*S+1/T*(-8966.9-2890.53*S^(1/2)-77.942*S+1.728*S^1.5-0.0996*S^2)+log(T)*(-24.4344-25.085*S^(1/2)-0.2474*S)+0.053105*S^(1/2)*T); %(mol kg-1)2 %mol kg-1 Hain 2015
 
-	KspC = 10.0^( -171.9065 - 0.077993*T + 2839.319/T + 71.595*log10(T) + S^0.5*(-0.777120 + 0.0028426*T + 178.340/T) - 0.07711*S + 0.0041249*S^1.5)
+	KspC = 10.0^( -171.9065 - 0.077993*T + 2839.319/T + 71.595*log10(T) + S^0.5*(-0.777120 + 0.0028426*T + 178.340/T) - 0.07711*S + 0.0041249*S^1.5);
 
- elseif period ==0
+elseif wK == 'Eocene'
  	Ca= 0.02; Mg = 0.03;
 	 
 %{
@@ -131,7 +131,7 @@ period = 1; % 1 for today and 0 for Eocene
 
     Kw = exp(146.6165292-13701.93677/T-23.34510121*log(T) + S^(1/2)*(-5.777126033+105.5781367/T+1.023014734*log(T))-0.016256003*S); %mol kg-1 Hain 2015
 
-    Kb = exp(156.169978+138.6678081*S^(1/2)+1.744675879*S+1/T*(-9226.072384-2874.822309*S^(1/2)-82.05134674*S+1.444274205*S^1.5-0.09130297*S^2)+log(T)*(-25.71609713-25.43581085*S^(1/2)-0.264978916*S)+0.054449827*S^(1/2)*T); %(mol kg-1)2 %mol kg-1 Hain 2015
+    Kb = exp(156.169978+138.6678081*S^(1/2) + 1.744675879*S+1/T*(-9226.072384-2874.822309*S^(1/2) - 82.05134674*S+1.444274205*S^1.5 - 0.09130297*S^2)+log(T)*(-25.71609713-25.43581085*S^(1/2)-0.264978916*S)+0.054449827*S^(1/2)*T); %(mol kg-1)2 %mol kg-1 Hain 2015
 	KspC = 10.0^(-64.4350 - 0.044654*T + 149.620/T + 27.778*log10(T) + S^0.5*(-0.650175 + 0.0026312*T + 158.390/T) - 0.07707*S + 0.0041206*S^1.5);
 	
  end
@@ -143,7 +143,7 @@ period = 1; % 1 for today and 0 for Eocene
  Kbd = Kb * exp(-(-29.48 + 0.1622*Tc - 0.002608*Tc*Tc)/R/Tke*P + 0.5*(-0.00284)/R/Tke*P*P);
  Kwd = Kw * exp(-(-20.02 + 0.1119*Tc - 0.001409*Tc*Tc)/R/Tke*P + 0.5*(-0.00513 + 0.794e-4*Tc)/R/Tke*P*P);
  %KsAd = KsA * exp(-(-46 + 0.5304*Tc)/R/Tke*P + 0.5*(-0.01176 - 3.692e-4*Tc)/R/Tke*P*P);
- KspCd = KspC * exp(-(-48.76 + 0.5304*Tc)/R/Tke*P + 0.5*(-0.01176 - 3.692e-4*Tc)/R/Tke*P*P)
+ KspCd = KspC * exp(-(-48.76 + 0.5304*Tc)/R/Tke*P + 0.5*(-0.01176 - 3.692e-4*Tc)/R/Tke*P*P);
  
 c = 11.88*10^(-6);%11.88*10^(-6)% not the same as in Sarmiento&Gruber, c = 1.185*10^(-6) (Uppstrom, 1974)%give the relationship between borate and salinity
 

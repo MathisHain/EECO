@@ -13,7 +13,7 @@ function [ phico2 ] = co2_flux(Kwind, T,S,DIC, ALK, pco2_a,wK)
 %ALK[mole/kg] - Ocean Alkalinity
 %pco2_a[ppm] - Atmopheric pCO2
 
-period = 1; % 1 for today and 0 for Eocene
+%period = 1; % 1 for today and 0 for Eocene
 
  if wK == 'Eocene'
 

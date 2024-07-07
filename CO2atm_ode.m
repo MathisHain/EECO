@@ -38,7 +38,6 @@ eps = 5.5; %isotope effect for nitrate assimilation
 
 Kwind=2/3600/24 ; % [m/s] piston velocity for air seas gas exchange///corresponding to 8.3 cm hr-1 (relatively close to 10cm hr-1 given in the Sarmiento&Gruber's book but depending on wind speed 
 
-%[H, pH, pCO2, H2CO2, HCO3, CO3, Ozd, CSH] = carb_solver(x(22)+273.15,x(25),x(7), x(19), 4000) %deep ocean carbonate chemistry
 
 %================
 % DEFINE YOUR SYSTEM
@@ -84,11 +83,13 @@ dx(25)=(T+M)/V_d*x(24)-(T+M)/V_d*x(25); % deep Sal from exchange with surface,ne
 % CaCO3 compensation
 
 if isnan(setSScsh)
-	%disp('Keeping ddiagnostic CO2')
-	dx(8)=((co2_flux(Kwind, temp_l, salinity_l,x(5), x(17), x(8),wK))*area_l)*(60*60*24*365)/V_a + ((co2_flux(Kwind, temp_h, salinity_h, x(6), x(18), x(8),wK))*area_h)*(60*60*24*365)/V_a;
+	%disp('No CaCO3 compensation; closed-system')	
  else
  	%disp('Holding CO2 levels constant at initialised initial condition')
-	dx(8)=0;
+	[H, pH, pCO2, H2CO2, HCO3, CO3, Ozd, CSH] = carb_solver(x(22)+273.15,x(25),x(7), x(19), setSScsh,wK); %deep ocean carbonate chemistry
+	netCaCO3dissolution = -(CSH-setSScsh) * (0.02/100) * (40e12);
+	dx(7) = dx(7)   + 1*netCaCO3dissolution/V_d; %DIC from net CaCO3 dissolution/preservation
+	dx(19) = dx(19) + 2*netCaCO3dissolution/V_d; %ALK from net CaCO3 dissolution/preservation
 end
 
 end 
