@@ -1,4 +1,4 @@
-function steadystate = boxmodel4_function(Npaz,ALKmean,wK, SSCSH, SSCO2)
+function finalstate = boxmodel4_function(Npaz,ALKmean,wK, SSCSH, SSCO2)
 
 %%%%%%%     MODEL MAIN TEMPLATE    %%%%%%%
 %==============================================
@@ -57,7 +57,7 @@ x0 = [x0 [35, 34.7, 34.7]]; % appending Sal as separate state variables to initi
 %=================
 	tspan = (0:1:5000); %1000 years of simulation
     [t,x] = ode45(@(t,x)CO2atm_ode(t,x,wK,SSCSH,SSCO2),tspan,x0,[]);
-	steadystate = x(end,:)
+	finalstate = x;
 
 end
 
