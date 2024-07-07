@@ -22,10 +22,10 @@ KE_l    = 0.99;
 KE_h    = 0.2;
 
 %global ALK_l ALK_h
-temp_l  = 273.15+15; %Low latitude temperature [K] %%+15
-temp_h  = 273.15+2; %High latitude temperature [K] %%2.0
-salinity_l = 34.0; %low latitude salinity [g/Kg]
-salinity_h = 31.0; %high latitude salinity [g/Kg]
+temp_l  = 273.15+x(20); %Low latitude temperature [K] %%+15
+temp_h  = 273.15+x(21); %High latitude temperature [K] %%2.0
+salinity_l = x(23);%34.0; %low latitude salinity [g/Kg]
+salinity_h = x(24);%31.0; %high latitude salinity [g/Kg]
 %Even though the unit of measurement are different from the one used in the
 %equations below (mmol/Kg vs mol/m3) this should not be a problem, as this
 %parameters enters only in the function co2_flux which give us a flux which
