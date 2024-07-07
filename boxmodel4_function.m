@@ -1,4 +1,4 @@
-function steadystate = boxmodel4_function(Npaz,ALKmean)
+function steadystate = boxmodel4_function(Npaz,ALKmean,wK, SSCSH, SSCO2)
 
 %%%%%%%     MODEL MAIN TEMPLATE    %%%%%%%
 %==============================================
@@ -12,7 +12,16 @@ PO4_a_ini  = 0.0;
 DIC_ll_ini = 1924*10^-6;%(mol/kg)1924*10^-6%%%%3000*10^-6
 DIC_hl_ini = 2149*10^-6;%(mol/kg)2149*10^-6%%%%3351*10^-6
 DIC_D_ini  = 2240*10^-6;%(mol/kg)2240*10^-6%%%%3493*10^-6
-pCO2_a_ini = 280*10^-6 ;%(atm)) 
+
+
+if isnan(SSCO2)
+	disp('Using default initial CO2=280ppm')
+	 pCO2_a_ini = 280*10^-6 ;%(atm))
+ else
+ 	disp('Using set CO2 level')
+ 	 pCO2_a_ini = SSCO2*10^-6 ;%(atm))
+ end
+	 
 NO3_ll_ini = 5*10^-6;%(mol/kg)
 NO3_hl_ini = Npaz;%25*10^-6;%(mol/kg)
 NO3_d_ini  = 34.7*10^-6;%(mol/kg)
@@ -47,7 +56,7 @@ x0 = [x0 [35, 34.7, 34.7]]; % appending Sal as separate state variables to initi
 %SOLVING THE ODE
 %=================
 	tspan = (0:1:5000); %1000 years of simulation
-    [t,x] = ode45(@CO2atm_ode,tspan,x0,[]);
+    [t,x] = ode45(@(t,x)CO2atm_ode(t,x,wK,SSCSH,SSCO2),tspan,x0,[]);
 	steadystate = x(end,:)
 
 end

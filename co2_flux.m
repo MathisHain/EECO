@@ -1,4 +1,4 @@
-function [ phico2 ] = co2_flux(Kwind, T,S,DIC, ALK, pco2_a)
+function [ phico2 ] = co2_flux(Kwind, T,S,DIC, ALK, pco2_a,wK)
 
 %Calculate the pco2 flux between the atmosphere and the surface ocean from
 %Temperature, salinity, DIC, Alkalinity of the ocean and the pco2 of the
@@ -15,7 +15,7 @@ function [ phico2 ] = co2_flux(Kwind, T,S,DIC, ALK, pco2_a)
 
 period = 1; % 1 for today and 0 for Eocene
 
- if period > 0
+ if wK == 'Eocene'
 
     K0 = exp(-60.2409 + 93.4517*(100.0/T)+23.3585*log(T/100.0) + S*(0.023517 - 0.023656*(T/100.0) + 0.0047036*(T/100.0)^2)); %% mol kg-1 atm-1 (Weiss, 1974; table 8.2.2 in Sarmiento&Gruber) Hain 2015
 
@@ -27,7 +27,7 @@ period = 1; % 1 for today and 0 for Eocene
 
     Kb = exp(148.0248+137.1942*S^(1/2)+1.62142*S+1/T*(-8966.9-2890.53*S^(1/2)-77.942*S+1.728*S^1.5-0.0996*S^2)+log(T)*(-24.4344-25.085*S^(1/2)-0.2474*S)+0.053105*S^(1/2)*T); %(mol kg-1)2 %mol kg-1 Hain 2015
     
- else
+ elseif wK == 'modern'
     
     K0 = exp(-59.10558297 + 91.85983392*(100.0/T)+22.80815968*log(T/100.0) + S*(0.026034049 - 0.025313942*(T/100.0) + 0.004987136*(T/100.0)^2)); %% mol kg-1 atm-1 (Weiss, 1974; table 8.2.2 in Sarmiento&Gruber) Hain 2015
 
