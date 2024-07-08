@@ -1,4 +1,4 @@
-function [H, pH, pCO2, H2CO3, HCO3, CO3, Ozd, CSH] = carb_solver(T,S,DIC, ALK, Depth,wK)
+function [CSH,H, pH, pCO2, H2CO3, HCO3, CO3, Ozd] = carb_solver(T,S,DIC, ALK, Depth,wK)
 
 %Calculate the pco2 flux between the atmosphere and the surface ocean from
 %Temperature, salinity, DIC, Alkalinity of the ocean and the pco2 of the
@@ -158,7 +158,7 @@ for i = 1:nt % see table 8.2.1 in Sarmiento&Gruber. To solve H+ using an iterati
 
     guessed = DIC/(H/K1d+1+K2d/H)+2*(DIC/(H^2/(K1d*K2d)+H/K2d+1))+Kwd/H-H+Kbd*c*S/(H+Kbd)  ;  % mol kg-1  to see table 
     
-    if (abs(guessed-ALK) < 10^-6)
+    if (abs(guessed-ALK) < 10^-7)
 		pH = PH_firstguess;
       break
     elseif (guessed-ALK < 0)

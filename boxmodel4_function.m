@@ -1,4 +1,4 @@
-function finalstate = boxmodel4_function(Npaz,ALKmean,wK, SSCSH, SSCO2)
+function finalstate = boxmodel4_function(Npaz,ALKmean,DICmean,wK, SSCSH, SSCO2)
 
 %%%%%%%     MODEL MAIN TEMPLATE    %%%%%%%
 %==============================================
@@ -9,9 +9,9 @@ PO4_ll_ini = 0.5*10^-6;%(mol/kg)
 PO4_hl_ini = 1.48*10^-6;%(mol/kg)
 PO4_d_ini  = 2.15*10^-6;%(mol/kg)
 PO4_a_ini  = 0.0; 
-DIC_ll_ini = 1924*10^-6;%(mol/kg)1924*10^-6%%%%3000*10^-6
-DIC_hl_ini = 2149*10^-6;%(mol/kg)2149*10^-6%%%%3351*10^-6
-DIC_D_ini  = 2240*10^-6;%(mol/kg)2240*10^-6%%%%3493*10^-6
+DIC_ll_ini = DICmean;%(mol/kg)1924*10^-6%%%%3000*10^-6
+DIC_hl_ini = DICmean;%(mol/kg)2149*10^-6%%%%3351*10^-6
+DIC_D_ini  = DICmean;%(mol/kg)2240*10^-6%%%%3493*10^-6
 
 
 if isnan(SSCO2)

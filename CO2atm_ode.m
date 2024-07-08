@@ -86,8 +86,10 @@ if isnan(setSScsh)
 	%disp('No CaCO3 compensation; closed-system')	
  else
  	%disp('Holding CO2 levels constant at initialised initial condition')
-	[H, pH, pCO2, H2CO2, HCO3, CO3, Ozd, CSH] = carb_solver(x(22)+273.15,x(25),x(7), x(19), setSScsh,wK); %deep ocean carbonate chemistry
-	netCaCO3dissolution = -(CSH-setSScsh) * (0.02/100) * (40e12);
+	CSH = carb_solver(x(22)+273.15,x(25),x(7), x(19), setSScsh,wK) %deep ocean carbonate chemistry
+	netCaCO3dissolution = -(CSH-setSScsh) * (0.02/100) * (40e12)/V_d
+	dx(19)
+	
 	dx(7) = dx(7)   + 1*netCaCO3dissolution/V_d; %DIC from net CaCO3 dissolution/preservation
 	dx(19) = dx(19) + 2*netCaCO3dissolution/V_d; %ALK from net CaCO3 dissolution/preservation
 end
