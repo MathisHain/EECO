@@ -1,18 +1,23 @@
-function finalstate = boxmodel4_function(Npaz,ALKmean,DICmean,wK, SSCSH, SSCO2)
+function finalstate = boxmodel4_function(KE_h,ALKmean,DICmean,wK, SSCSH, SSCO2) 
+%%% to use the degree of nutrient concentration (KE_h) in the high-latitude box and impose a mean initial concentration for the whole ocean as for DIC and Alk
+%%% what represent SSCSH?
+
+% x vector:
+% 1 = PO4_ll; 2 = PO4_hl; 3 = PO4_d; 4 = DIC_ll; 5 =  DIC_hl; 6 = DIC_D; 
+% 7 = pCO2_a; 8 = Alk_ll; 9 = ALk_hl; 10 = Alk_d; 11 = T_ll; 12 = T_hl
+% 13 = T_d; 14 = S_ll; 15 = S_hl; 16 = S_d
 
 %%%%%%%     MODEL MAIN TEMPLATE    %%%%%%%
 %==============================================
 %INITIAL CONDITIONS and time span of simulation
 %===============================================
     
-PO4_ll_ini = 0.5*10^-6;%(mol/kg)
-PO4_hl_ini = 1.48*10^-6;%(mol/kg)
+PO4_ll_ini = 2.15*10^-6;%(mol/kg)
+PO4_hl_ini = 2.15*10^-6;%(mol/kg)
 PO4_d_ini  = 2.15*10^-6;%(mol/kg)
-PO4_a_ini  = 0.0; 
 DIC_ll_ini = DICmean;%(mol/kg)1924*10^-6%%%%3000*10^-6
 DIC_hl_ini = DICmean;%(mol/kg)2149*10^-6%%%%3351*10^-6
 DIC_D_ini  = DICmean;%(mol/kg)2240*10^-6%%%%3493*10^-6
-
 
 if isnan(SSCO2)
 	disp('Using default initial CO2=280ppm')
@@ -21,42 +26,27 @@ if isnan(SSCO2)
  	disp('Using set CO2 level')
  	 pCO2_a_ini = SSCO2*10^-6 ;%(atm))
  end
-	 
-NO3_ll_ini = 5*10^-6;%(mol/kg)
-NO3_hl_ini = Npaz;%25*10^-6;%(mol/kg)
-NO3_d_ini  = 34.7*10^-6;%(mol/kg)
-NO3_a_ini  = 0.0;  
-%global ALK_l ALK_h
-%ALK_l   = 2322*10^-6; %Low latitude alkalinity [mol/kg] - 2322*10^-6
-%ALK_h   = 2322*10^-6; %high latitude alkalinity [mol/kg] - 2322*10^-6
 
-d15N_ll_ini        = 5.4; % d15N for delta values
-d15N_hl_ini        = 5.4;
-d15N_d_ini         = 5.4;
-d15N_a_ini         = 5.4;
-R15ref             = 0.0036782; % isotopic ratio of Air N2 (i.e., the international reference for N isotopes)
-
-N15_ll_ini         =((((d15N_ll_ini)/1000)+1)*R15ref)*NO3_ll_ini; %15N for 15N concentration
-N15_hl_ini         =((((d15N_hl_ini)/1000)+1)*R15ref)*NO3_hl_ini;
-N15_d_ini          =((((d15N_d_ini)/1000)+1)*R15ref)*NO3_d_ini;
-N15_a_ini          =((((d15N_a_ini)/1000)+1)*R15ref)*NO3_a_ini;
-
-x0 = [PO4_ll_ini, PO4_hl_ini, PO4_d_ini, PO4_a_ini, DIC_ll_ini, DIC_hl_ini,DIC_D_ini,pCO2_a_ini,NO3_ll_ini,NO3_hl_ini,NO3_d_ini,NO3_a_ini,N15_ll_ini,N15_hl_ini,N15_d_ini,N15_a_ini];
-
-% need to keep track of ALK also as a dynamic state ariable
 ALK_ll_ini = ALKmean;
 ALK_hl_ini = ALKmean;
 ALK_d_ini  = ALKmean;
-x0 = [x0 [ALK_ll_ini, ALK_hl_ini, ALK_d_ini]]; % appending ALK as separate state variables to initial state vector
-x0 = [x0 [25, 0, 5]]; % appending T as separate state variables to initial state vector
-x0 = [x0 [35, 34.7, 34.7]]; % appending Sal as separate state variables to initial state vector
 
+T_ll_ini = 25;
+T_hl_ini = 0;
+T_d_ini = 5;
+
+S_ll_ini = 35;
+S_hl_ini = 34.7;
+S_d_ini = 34.7;
+  
+x0 = [PO4_ll_ini, PO4_hl_ini, PO4_d_ini, DIC_ll_ini, DIC_hl_ini,DIC_D_ini,pCO2_a_ini, ALK_ll_ini, ALK_hl_ini, ALK_d_ini...
+    T_ll_ini, T_hl_ini, T_d_ini, S_ll_ini,S_hl_ini,S_d_ini];
 
 %=================
 %SOLVING THE ODE
 %=================
 	tspan = (0:1:5000); %1000 years of simulation
-    [t,x] = ode45(@(t,x)CO2atm_ode(t,x,wK,SSCSH,SSCO2),tspan,x0,[]);
+    [t,x] = ode15s(@(t,x)CO2atm_ode(t,x,wK,SSCSH,SSCO2),tspan,x0,[]);
 	finalstate = x;
 
 end
