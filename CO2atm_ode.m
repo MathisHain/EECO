@@ -26,12 +26,11 @@ temp_l  = 273.15+x(11); %Low latitude temperature [K]
 temp_h  = 273.15+x(12); %High latitude temperature [K] 
 salinity_l = x(14);%low latitude salinity [g/Kg]
 salinity_h = x(15);%high latitude salinity [g/Kg]
-%Even though the unit of measurement are different from the one used in the
-%equations below (mmol/Kg vs mol/m3) this should not be a problem, as this
-%parameters enters only in the function co2_flux which give us a flux which
-%is moles/m2*s, which is compatible with our units.
 
+Rpump = 0.2; % carbonate vs soft-tissue pump in low-latitude area
 Rcp = 116.0; % carbon to phosphorus ratio (to convert export form phosphorus to carbon unit)
+Rnp = 16; % nitrogen to phosphorus ratio (for the effect of the soft-tissue pump on alkalinity
+Ralk = 2; % Alk to DIC ratio for the carbonate pump
 
 Kwind=2/3600/24 ; % [m/s] piston velocity for air seas gas exchange///corresponding to 8.3 cm hr-1 (relatively close to 10cm hr-1 given in the Sarmiento&Gruber's book but depending on wind speed 
 
@@ -45,9 +44,9 @@ dx(1)= -T/V_l*x(1)+T/V_l*x(3)-T/V_l*x(3)*KE_l;
 dx(2)= T/V_h*x(1)+M/V_h*x(3)-M/V_h*x(2)-T/V_h*x(2)-T/V_h*x(1)*KE_h-M/V_h*x(3)*KE_h;
 dx(3)= T/V_d*x(2)+M/V_d*x(2)-M/V_d*x(3)-T/V_d*x(3)+T/V_d*x(3)*KE_l+T/V_d*x(1)*KE_h+M/V_d*x(3)*KE_h;
 %DIC
-dx(4)=T/V_l*x(6)-T/V_l*x(4)-T/V_l*KE_l*Rcp*x(3)-(co2_flux(Kwind, temp_l, salinity_l,x(4), x(8), x(7),wK)*area_l)*(60*60*24*365)/V_l;
+dx(4)=T/V_l*x(6)-T/V_l*x(4)-T/V_l*KE_l*Rcp*x(3)-T/V_l*KE_l*Rcp*x(3)*Rpump -(co2_flux(Kwind, temp_l, salinity_l,x(4), x(8), x(7),wK)*area_l)*(60*60*24*365)/V_l;
 dx(5)=T/V_h*x(4)-T/V_h*x(5)+M/V_h*x(6)-M/V_h*x(5)-T/V_h*KE_h*Rcp*x(1)-M/V_h*KE_h*Rcp*x(3)-(co2_flux(Kwind, temp_h, salinity_h,x(5), x(9), x(7),wK)*area_h)*(60*60*24*365)/V_h;
-dx(6)=T/V_d*x(5)-T/V_d*x(6)+M/V_d*x(5)-M/V_d*x(6)+T/V_d*KE_l*Rcp*x(3)+T/V_d*KE_h*Rcp*x(1)+M/V_d*KE_h*Rcp*x(3);
+dx(6)=T/V_d*x(5)-T/V_d*x(6)+M/V_d*x(5)-M/V_d*x(6)+T/V_d*KE_l*Rcp*x(3)+T/V_d*KE_h*Rcp*x(1)+M/V_d*KE_h*Rcp*x(3)+T/V_d*KE_l*Rcp*x(3)*Rpump;
 if isnan(setCO2)
 	%disp('Keeping ddiagnostic CO2')
 	dx(7)=((co2_flux(Kwind, temp_l, salinity_l,x(4), x(8), x(7),wK))*area_l)*(60*60*24*365)/V_a + ((co2_flux(Kwind, temp_h, salinity_h, x(5), x(9), x(7),wK))*area_h)*(60*60*24*365)/V_a;
@@ -56,9 +55,9 @@ if isnan(setCO2)
 	dx(7)=0;
 end
 % alkalinity
-dx(8)=(T)/V_l*x(19)-(T)/V_l*x(17); % needs CaCO3 and OM-acidity export fluxes
-dx(9)=(T)/V_h*x(17)+(M)/V_h*x(19)-(T+M)/V_h*x(18); % needs M-acidity export fluxe
-dx(10)=(T+M)/V_d*x(18)-(T+M)/V_d*x(19); % needs dissolution/respiration
+dx(8)= T/V_l*x(10)-T/V_l*x(8)+T/V_l*KE_l*Rnp*x(3)-T/V_l*KE_l*Rcp*x(3)*Rpump*Ralk; 
+dx(9)= T/V_h*x(8)+M/V_h*x(10)-M/V_h*x(9)-T/V_h*x(9)+T/V_h*KE_h*Rnp*x(1)+M/V_h*KE_h*Rnp*x(3); 
+dx(10)= T/V_d*x(9)+M/V_d*x(9)-M/V_d*x(10)-T/V_d*x(10)-T/V_d*KE_l*Rnp*x(3)-T/V_d*KE_h*Rnp*x(1)-M/V_d*KE_h*Rnp*x(3)+T/V_d*KE_l*Rcp*x(3)*Rpump*Ralk; 
 %temperature
 dx(11)=0; % set LL surf temp
 dx(12)=0; % set HL surf temp
