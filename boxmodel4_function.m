@@ -46,7 +46,7 @@ x0 = [PO4_ll_ini, PO4_hl_ini, PO4_d_ini, DIC_ll_ini, DIC_hl_ini,DIC_D_ini,pCO2_a
 %SOLVING THE ODE
 %=================
 	tspan = (0:1:5000); %1000 years of simulation
-    [t,x] = ode15s(@(t,x)CO2atm_ode(t,x,wK,SSCSH,SSCO2),tspan,x0,[]);
+    [t,x] = ode15s(@(t,x)CO2atm_ode(t,x,KE_h,wK,SSCSH,SSCO2),tspan,x0,[]);
 	finalstate = x;
 
 end
