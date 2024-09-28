@@ -1,4 +1,4 @@
-function dx = CO2atm_ode(t,x,wK,setSScsh,setCO2)
+function dx = CO2atm_ode(t,x,KE_h,wK,setSScsh,setCO2)
 
 %=======================
 %Parameters declariation
@@ -19,7 +19,7 @@ V_a     =1.773*10^20;                % Mass of atmospheric box [mol]
 %V_a     = 8.69e18*1.25;             %Mass TROPOSPHERE (calculated) (m3*1.25Kg/m3)
 
 KE_l    = 0.99;
-KE_h    = 0.2;
+%KE_h    = 0.2;
 
 %global ALK_l ALK_h
 temp_l  = 273.15+x(11); %Low latitude temperature [K] 
