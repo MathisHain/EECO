@@ -22,10 +22,10 @@ KE_l    = 0.99;
 %KE_h    = 0.2;
 
 %global ALK_l ALK_h
-temp_l  = 273.15+x(11); %Low latitude temperature [K] 
-temp_h  = 273.15+x(12); %High latitude temperature [K] 
-salinity_l = x(14);%low latitude salinity [g/Kg]
-salinity_h = x(15);%high latitude salinity [g/Kg]
+temp_l  = 273.15+25; %Low latitude temperature [K] %%+15
+temp_h  = 273.15+0; %High latitude temperature [K] %%2.0
+salinity_l = 35;%low latitude salinity [g/Kg]
+salinity_h = 34.7;%high latitude salinity [g/Kg]
 
 Rpump = 0.2; % carbonate vs soft-tissue pump in low-latitude area
 Rcp = 116.0; % carbon to phosphorus ratio (to convert export form phosphorus to carbon unit)
@@ -54,7 +54,7 @@ if isnan(setCO2)
  	%disp('Holding CO2 levels constant at initialised initial condition')
 	dx(7)=0;
 end
-% alkalinity
+% alkanity
 dx(8)= T/V_l*x(10)-T/V_l*x(8)+T/V_l*KE_l*Rnp*x(3)-T/V_l*KE_l*Rcp*x(3)*Rpump*Ralk; 
 dx(9)= T/V_h*x(8)+M/V_h*x(10)-M/V_h*x(9)-T/V_h*x(9)+T/V_h*KE_h*Rnp*x(1)+M/V_h*KE_h*Rnp*x(3); 
 dx(10)= T/V_d*x(9)+M/V_d*x(9)-M/V_d*x(10)-T/V_d*x(10)-T/V_d*KE_l*Rnp*x(3)-T/V_d*KE_h*Rnp*x(1)-M/V_d*KE_h*Rnp*x(3)+T/V_d*KE_l*Rcp*x(3)*Rpump*Ralk; 
@@ -71,12 +71,11 @@ if isnan(setSScsh)
 	%disp('No CaCO3 compensation; closed-system')	
  else
  	%disp('Holding CO2 levels constant at initialised initial condition')
-	CSH = carb_solver(x(13)+273.15,x(16),x(6), x(10), setSScsh,wK) %deep ocean carbonate chemistry
-	netCaCO3dissolution = -(CSH-setSScsh) * (0.02/100) * (40e12)/V_d
+	CSH = carb_solver(x(13)+273.15,x(16),x(6), x(10), setSScsh,wK); %deep ocean carbonate chemistry
+	netCaCO3dissolution = -(CSH-setSScsh) * (0.02/100) * (40e12)/V_d;
 	dx(6) = dx(6)   + 1*netCaCO3dissolution/V_d; %DIC from net CaCO3 dissolution/preservation
 	dx(10) = dx(10) + 2*netCaCO3dissolution/V_d; %ALK from net CaCO3 dissolution/preservation
 end
 end 
-
 
 
