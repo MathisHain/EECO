@@ -31,9 +31,9 @@ ALK_ll_ini = ALKmean;
 ALK_hl_ini = ALKmean;
 ALK_d_ini  = ALKmean;
 
-T_ll_ini = 25;
-T_hl_ini = 0;
-T_d_ini = 5;
+T_ll_ini = 273.15+25;
+T_hl_ini = 273.15+0;
+T_d_ini = 273.15+5;
 
 S_ll_ini = 35;
 S_hl_ini = 34.7;
@@ -46,7 +46,7 @@ x0 = [PO4_ll_ini, PO4_hl_ini, PO4_d_ini, DIC_ll_ini, DIC_hl_ini,DIC_D_ini,pCO2_a
 %SOLVING THE ODE
 %=================
 	tspan = (0:1:5000); %1000 years of simulation
-    [t,x] = ode15s(@(t,x)CO2atm_ode(t,x,KE_h,wK,SSCSH,SSCO2),tspan,x0,[]);
+    [t,x] = ode45(@(t,x)CO2atm_ode(t,x,KE_h,wK,SSCSH,SSCO2),tspan,x0,[]);
 	finalstate = x;
 
 end
