@@ -26,23 +26,42 @@ fprintf('Final CSH: %d\n',carb_solver(finalstate(end,13)+273.15,finalstate(end,1
 % now a loop to run for different levels of Npaz for different combinations of whichK and setCSH
 
 h=figure;
-subplot(4,1,1)
-plot(finalstate(:,7)) %CO2
+subplot(3,2,1)
+plot(finalstate(:,7)*1000000) %pCO2
 
-subplot(4,1,2)
-plot(CSH)
-
-subplot(4,1,3)
+subplot(3,2,3)
 hold on
-plot(finalstate(:,6)) % deep DIC
-plot(finalstate(:,10)) % deep ALK
+plot(finalstate(:,4)*1000) % LL DIC
+plot(finalstate(:,5)*1000) % HL DIC
+plot(finalstate(:,6)*1000) % deep DIC
 hold off 
 
-subplot(4,1,4)
+subplot(3,2,5)
 hold on
-plot(finalstate(:,11)) % LL T
-plot(finalstate(:,12)) % HL T
-plot(finalstate(:,13)) % deep T
+plot(finalstate(:,8)*1000) % LL ALK
+plot(finalstate(:,9)*1000) % HL ALK
+plot(finalstate(:,10)*1000) % deep ALK
+hold off 
+
+subplot(3,2,2)
+hold on
+plot(finalstate(:,1)*1000000) % LL PO4
+plot(finalstate(:,2)*1000000) % HL PO4
+plot(finalstate(:,3)*1000000) % deep PO4
+hold off 
+
+subplot(3,2,4)
+hold on
+plot(finalstate(:,11)-273.15) % LL T
+plot(finalstate(:,12)-273.15) % HL T
+plot(finalstate(:,13)-273.15) % deep T
+hold off 
+
+subplot(3,2,6)
+hold on
+plot(finalstate(:,14)) % LL S
+plot(finalstate(:,15)) % HL S
+plot(finalstate(:,16)) % deep S
 hold off 
 
 saveas(h,'QuickPlot','jpg')
