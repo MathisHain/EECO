@@ -180,5 +180,5 @@ HCO3 = DIC*(K1d*H/(H^2+K1d*H+K1d*K2d));
 CO3 = DIC*(K1d*K2d/(H^2+K1d*H+K1d*K2d));
 Ozd = Ca*CO3/KspCd;
 CSH = Depth + log(Ozd)/dlogKsp_dz;
-
+%printf(Ozd,CSH)
 end

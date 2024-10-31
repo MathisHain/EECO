@@ -26,6 +26,12 @@ if isnan(SSCO2)
  	disp('Using set CO2 level')
  	 pCO2_a_ini = SSCO2*10^-6 ;%(atm))
  end
+ 
+ if isnan(SSCSH)
+ 	disp('No CaCO3 compensation; closed-system')
+  else
+  	disp('CaCO3 compensation with setCSH; open-system')
+  end
 
 ALK_ll_ini = ALKmean;
 ALK_hl_ini = ALKmean;
@@ -45,7 +51,7 @@ x0 = [PO4_ll_ini, PO4_hl_ini, PO4_d_ini, DIC_ll_ini, DIC_hl_ini,DIC_D_ini,pCO2_a
 %=================
 %SOLVING THE ODE
 %=================
-	tspan = (0:1:5000); %1000 years of simulation
+	tspan = (0:1:10000); %1000 years of simulation
     [t,x] = ode45(@(t,x)CO2atm_ode(t,x,KE_h,wK,SSCSH,SSCO2),tspan,x0,[]);
 	finalstate = x;
 

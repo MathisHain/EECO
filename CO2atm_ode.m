@@ -57,7 +57,7 @@ end
 % alkanity
 dx(8)= T/V_l*x(10)-T/V_l*x(8)+T/V_l*KE_l*Rnp*x(3)-T/V_l*KE_l*Rcp*x(3)*Rpump*Ralk; 
 dx(9)= T/V_h*x(8)+M/V_h*x(10)-M/V_h*x(9)-T/V_h*x(9)+T/V_h*KE_h*Rnp*x(1)+M/V_h*KE_h*Rnp*x(3); 
-dx(10)= T/V_d*x(9)+M/V_d*x(9)-M/V_d*x(10)-T/V_d*x(10)-T/V_d*KE_l*Rnp*x(3)-T/V_d*KE_h*Rnp*x(1)-M/V_d*KE_h*Rnp*x(3)+T/V_d*KE_l*Rcp*x(3)*Rpump*Ralk; 
+dx(10)= T/V_d*x(9)+M/V_d*x(9)-M/V_d*x(10)-T/V_d*x(10)-T/V_d*KE_l*Rnp*x(3)-T/V_d*KE_h*Rnp*x(1)-M/V_d*KE_h*Rnp*x(3)+T/V_d*KE_l*Rcp*x(3)*Rpump*Ralk;
 %temperature
 dx(11)=0; % set LL surf temp
 dx(12)=0; % set HL surf temp
@@ -70,11 +70,11 @@ dx(16)=T/V_d*x(15)+M/V_d*x(15)-M/V_d*x(16)-T/V_d*x(16);
 if isnan(setSScsh)
 	%disp('No CaCO3 compensation; closed-system')	
  else
- 	%disp('Holding CO2 levels constant at initialised initial condition')
-	CSH = carb_solver(x(13)+273.15,x(16),x(6), x(10), setSScsh,wK); %deep ocean carbonate chemistry
+ 	%disp('CaCO3 compensation; open-system')
+	CSH = carb_solver(x(13),x(16),x(6), x(10), setSScsh,wK); %deep ocean carbonate chemistry
 	netCaCO3dissolution = -(CSH-setSScsh) * (0.02/100) * (40e12)/V_d;
-	dx(6) = dx(6)   + 1*netCaCO3dissolution/V_d; %DIC from net CaCO3 dissolution/preservation
-	dx(10) = dx(10) + 2*netCaCO3dissolution/V_d; %ALK from net CaCO3 dissolution/preservation
+	dx(6) = dx(6)   + 1*netCaCO3dissolution; %DIC from net CaCO3 dissolution/preservation
+	dx(10) = dx(10) + 2*netCaCO3dissolution; %ALK from net CaCO3 dissolution/preservation
 end
 end 
 
