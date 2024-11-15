@@ -4,8 +4,8 @@ function dx = CO2atm_ode(t,x,KE_h,wK,setSScsh,setCO2)
 %Parameters declariation
 %=======================
 % >> DATA FROM TOGGELWEIER AND SARMIENTO 1985 <<
-T       = 24.5e6*1027*(60*60*24*365);              %Overturning,Kg/yr (m3/yr*1027Kg/m3) 24.5
-M       = 38.1e6*1027*(60*60*24*365);              %High-latitude exchange, Kg/yr (m3/yr*1027Kg/m3); 38.1e6*1027 
+T       = 20e6*1027*(60*60*24*365);              %Overturning,Kg/yr (m3/yr*1027Kg/m3) 24.5
+M       = 60e6*1027*(60*60*24*365);              %High-latitude exchange, Kg/yr (m3/yr*1027Kg/m3); 38.1e6*1027 
 V_tot   = 1.3e18*1027;              %Total ocean volume, m3
 A_tot   = 1.3e18/3790;              %Ocean surface area, m2
 mix_h   = 250 ;                     %Depth of mixed layer high lat ocean m
