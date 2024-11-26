@@ -1,8 +1,8 @@
-KE_h = 0.0;
+KE_h = 0.1;
 ALKmean = 2364*10^-6;%(mol/kg)
 DICmean = 2249*10^-6;%(mol/kg)
 whichK='modern';
-setSScsh = 3000; %set the desired steady state CSH depth for CaCO3 compensation; if NaN its closed-system CaCO3
+setSScsh = 2657; %set the desired steady state CSH depth for CaCO3 compensation; if NaN its closed-system CaCO3
 setCO2 = NaN; % spin-up to a certain CO2; if NaN its closed-system CO2
 finalstate = boxmodel4_function(KE_h,ALKmean,DICmean,whichK,setSScsh,setCO2);
 
