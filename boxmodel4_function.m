@@ -1,4 +1,4 @@
-function finalstate = boxmodel4_function(KE_h,ALKmean,DICmean,wK, SSCSH, SSCO2,Tfeedback,tmax) 
+function finalstate = boxmodel4_function(KE_h,ALKmean,DICmean,wK, SSCSH, SSCO2,Tfeedback,init_dT,tmax) 
 %%% to use the degree of nutrient concentration (KE_h) in the high-latitude box and impose a mean initial concentration for the whole ocean as for DIC and Alk
 %%% what represent SSCSH?
 
@@ -37,9 +37,9 @@ ALK_ll_ini = ALKmean;
 ALK_hl_ini = ALKmean;
 ALK_d_ini  = ALKmean;
 
-T_ll_ini = 273.15+25;
-T_hl_ini = 273.15+0;
-T_d_ini = 273.15+5;
+T_ll_ini = 273.15+25+init_dT;
+T_hl_ini = 273.15+0+init_dT;
+T_d_ini = 273.15+5+init_dT;
 
 S_ll_ini = 35;
 S_hl_ini = 34.7;
