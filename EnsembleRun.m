@@ -8,9 +8,10 @@ DICmean = 2255*10^-6;%(mol/kg)
 whichK='modern';
 setSScsh = 3000; %set the desired steady state CSH depth for CaCO3 compensation; if NaN its closed-system CaCO3
 setCO2 = NaN; % spin-up to a certain CO2; if NaN its closed-system CO2
-spinupM = boxmodel4_function(KE_h,ALKmean,DICmean,whichK,setSScsh,setCO2,20000);
+Tfeedback = 1;
+spinupM = boxmodel4_function(KE_h,ALKmean,DICmean,whichK,setSScsh,setCO2,Tfeedback,20000);
 deltaALK=spinupM(end,18)-ALKmean;
-fprintf('∆ALK= %d, CO2=%d, CSH=%d\n\n',spinupM(end,18)-ALKmean , spinupM(end,7) , spinupM(end,17))
+fprintf('∆ALK= %d, CO2=%d, CSH=%d, T=%d\n\n',spinupM(end,18)-ALKmean , spinupM(end,7) , spinupM(end,17),spinupM(end,11)-273.15)
 
 modernK_open = {};
 for polarPid = 1:1
@@ -19,8 +20,8 @@ for polarPid = 1:1
 	ALKmean = 2364*10^-6 + deltaALK;%(mol/kg)
 	DICmean = 2255*10^-6 + deltaALK/2;%(mol/kg)
 	setCO2 = NaN; % spin-up to a certain CO2; if NaN its closed-system CO2
-	finalstate = boxmodel4_function(KE_h,ALKmean,DICmean,whichK,setSScsh,setCO2,10000);
-	fprintf('∆ALK= %d, CO2=%d, CSH=%d\n\n',finalstate(end,18)-ALKmean , finalstate(end,7) , finalstate(end,17))
+	finalstate = boxmodel4_function(KE_h,ALKmean,DICmean,whichK,setSScsh,setCO2,Tfeedback,10000);
+	fprintf('∆ALK= %d, CO2=%d, CSH=%d, T=%d\n\n',finalstate(end,18)-ALKmean , finalstate(end,7) , finalstate(end,17),finalstate(end,11)-273.15)
 	modernK_open{end+1} = finalstate;
 end
 
@@ -32,8 +33,8 @@ for polarPid = 1:1
 	DICmean = 2255*10^-6 + deltaALK/2;%(mol/kg)
 	setSScsh = NaN; %set the desired steady state CSH depth for CaCO3 compensation; if NaN its closed-system CaCO3
 	setCO2 = NaN; % spin-up to a certain CO2; if NaN its closed-system CO2
-	finalstate = boxmodel4_function(KE_h,ALKmean,DICmean,whichK,setSScsh,setCO2,10000);
-	fprintf('∆ALK= %d, CO2=%d, CSH=%d\n\n',finalstate(end,18)-ALKmean , finalstate(end,7) , finalstate(end,17))
+	finalstate = boxmodel4_function(KE_h,ALKmean,DICmean,whichK,setSScsh,setCO2,Tfeedback,10000);
+	fprintf('∆ALK= %d, CO2=%d, CSH=%d, T=%d\n\n',finalstate(end,18)-ALKmean , finalstate(end,7) , finalstate(end,17),finalstate(end,11)-273.15)
 	modernK_closed{end+1} = finalstate;
 end
 
@@ -47,9 +48,9 @@ DICmean = 2255*10^-6;%(mol/kg)
 whichK='Eocene';
 setSScsh = 3000; %set the desired steady state CSH depth for CaCO3 compensation; if NaN its closed-system CaCO3
 setCO2 = NaN; % spin-up to a certain CO2; if NaN its closed-system CO2
-spinupE = boxmodel4_function(KE_h,ALKmean,DICmean,whichK,setSScsh,setCO2,20000);
+spinupE = boxmodel4_function(KE_h,ALKmean,DICmean,whichK,setSScsh,setCO2,Tfeedback,20000);
 deltaALK=spinupE(end,18)-ALKmean;
-fprintf('∆ALK= %d, CO2=%d, CSH=%d\n\n',spinupE(end,18)-ALKmean , spinupE(end,7) , spinupE(end,17))
+fprintf('∆ALK= %d, CO2=%d, CSH=%d, T=%d\n\n',spinupE(end,18)-ALKmean , spinupE(end,7) , spinupE(end,17),spinupE(end,11)-273.15)
 
 eoceneK_open = {};
 for polarPid = 1:1
@@ -58,8 +59,8 @@ for polarPid = 1:1
 	ALKmean = 2364*10^-6 + deltaALK;%(mol/kg)
 	DICmean = 2255*10^-6 + deltaALK/2;%(mol/kg)
 	setCO2 = NaN; % spin-up to a certain CO2; if NaN its closed-system CO2
-	finalstate = boxmodel4_function(KE_h,ALKmean,DICmean,whichK,setSScsh,setCO2,10000);
-	fprintf('∆ALK= %d, CO2=%d, CSH=%d\n\n',finalstate(end,18)-ALKmean , finalstate(end,7) , finalstate(end,17))
+	finalstate = boxmodel4_function(KE_h,ALKmean,DICmean,whichK,setSScsh,setCO2,Tfeedback,10000);
+	fprintf('∆ALK= %d, CO2=%d, CSH=%d, T=%d\n\n',finalstate(end,18)-ALKmean , finalstate(end,7) , finalstate(end,17),finalstate(end,11)-273.15)
 	modernK_open{end+1} = finalstate;
 end
 
@@ -71,8 +72,8 @@ for polarPid = 1:1
 	DICmean = 2255*10^-6 + deltaALK/2;%(mol/kg)
 	setSScsh = NaN; %set the desired steady state CSH depth for CaCO3 compensation; if NaN its closed-system CaCO3
 	setCO2 = NaN; % spin-up to a certain CO2; if NaN its closed-system CO2
-	finalstate = boxmodel4_function(KE_h,ALKmean,DICmean,whichK,setSScsh,setCO2,10000);
-	fprintf('∆ALK= %d, CO2=%d, CSH=%d\n\n',finalstate(end,18)-ALKmean , finalstate(end,7) , finalstate(end,17))
+	finalstate = boxmodel4_function(KE_h,ALKmean,DICmean,whichK,setSScsh,setCO2,Tfeedback,10000);
+	fprintf('∆ALK= %d, CO2=%d, CSH=%d, T=%d\n\n',finalstate(end,18)-ALKmean , finalstate(end,7) , finalstate(end,17),finalstate(end,11)-273.15)
 	modernK_closed{end+1} = finalstate;
 end
 

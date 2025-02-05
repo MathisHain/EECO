@@ -1,4 +1,4 @@
-function finalstate = boxmodel4_function(KE_h,ALKmean,DICmean,wK, SSCSH, SSCO2,tmax) 
+function finalstate = boxmodel4_function(KE_h,ALKmean,DICmean,wK, SSCSH, SSCO2,Tfeedback,tmax) 
 %%% to use the degree of nutrient concentration (KE_h) in the high-latitude box and impose a mean initial concentration for the whole ocean as for DIC and Alk
 %%% what represent SSCSH?
 
@@ -52,7 +52,7 @@ x0 = [PO4_ll_ini, PO4_hl_ini, PO4_d_ini, DIC_ll_ini, DIC_hl_ini,DIC_D_ini,pCO2_a
 %SOLVING THE ODE
 %=================
 	tspan = (0:1:tmax); %1000 years of simulation
-    [t,x] = ode45(@(t,x)CO2atm_ode(t,x,KE_h,wK,SSCSH,SSCO2),tspan,x0,[]);
+    [t,x] = ode45(@(t,x)CO2atm_ode(t,x,KE_h,wK,SSCSH,SSCO2,Tfeedback),tspan,x0,[]);
 	finalstate = x(1:100:end,:);
 
 	V_tot   = 1.3e18*1027;              %Total ocean volume, m3

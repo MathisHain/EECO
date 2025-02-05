@@ -1,4 +1,4 @@
-function dx = CO2atm_ode(t,x,KE_h,wK,setSScsh,setCO2)
+function dx = CO2atm_ode(t,x,KE_h,wK,setSScsh,setCO2,Tfeedback)
 
 %=======================
 %Parameters declariation
@@ -38,18 +38,27 @@ Kwind=2/3600/24 ; % [m/s] piston velocity for air seas gas exchange///correspond
 % DEFINE YOUR SYSTEM
 %================
 
+LtoA_CO2flux = (co2_flux(Kwind, x(11), x(14),x(4), x(8), x(7),wK)*area_l)*(60*60*24*365);
+HtoA_CO2flux = (co2_flux(Kwind, x(12), x(14),x(5), x(9), x(7),wK)*area_h)*(60*60*24*365);
+
+if (Tfeedback==1)
+	dT = 1.5*5.35*log(x(7)/283*10^6); % assuming lambda ECS of 1.5K/Wm^-2
+else
+	dT = 0;
+end
+
 dx=zeros(16,1);
 %PO4
 dx(1)= -T/V_l*x(1) + T/V_l*x(3) - T/V_l*x(3)*KE_l;
 dx(2)= T/V_h*x(1)+M/V_h*x(3)-M/V_h*x(2)-T/V_h*x(2)-T/V_h*x(1)*KE_h-M/V_h*x(3)*KE_h;
 dx(3)= T/V_d*x(2)+M/V_d*x(2)-M/V_d*x(3)-T/V_d*x(3)+T/V_d*x(3)*KE_l+T/V_d*x(1)*KE_h+M/V_d*x(3)*KE_h;
 %DIC
-dx(4)=T/V_l*x(6)-T/V_l*x(4)-T/V_l*KE_l*Rcp*x(3)-T/V_l*KE_l*Rcp*x(3)*Rpump -(co2_flux(Kwind, temp_l, salinity_l,x(4), x(8), x(7),wK)*area_l)*(60*60*24*365)/V_l;
-dx(5)=T/V_h*x(4)-T/V_h*x(5)+M/V_h*x(6)-M/V_h*x(5)-T/V_h*KE_h*Rcp*x(1)-M/V_h*KE_h*Rcp*x(3)-(co2_flux(Kwind, temp_h, salinity_h,x(5), x(9), x(7),wK)*area_h)*(60*60*24*365)/V_h;
+dx(4)=T/V_l*x(6)-T/V_l*x(4)-T/V_l*KE_l*Rcp*x(3)-T/V_l*KE_l*Rcp*x(3)*Rpump -LtoA_CO2flux/V_l;
+dx(5)=T/V_h*x(4)-T/V_h*x(5)+M/V_h*x(6)-M/V_h*x(5)-T/V_h*KE_h*Rcp*x(1)-M/V_h*KE_h*Rcp*x(3)-HtoA_CO2flux/V_h;
 dx(6)=T/V_d*x(5)-T/V_d*x(6)+M/V_d*x(5)-M/V_d*x(6)+T/V_d*KE_l*Rcp*x(3)+T/V_d*KE_h*Rcp*x(1)+M/V_d*KE_h*Rcp*x(3)+T/V_d*KE_l*Rcp*x(3)*Rpump;
 if isnan(setCO2)
 	%disp('Keeping ddiagnostic CO2')
-	dx(7)=((co2_flux(Kwind, temp_l, salinity_l,x(4), x(8), x(7),wK))*area_l)*(60*60*24*365)/V_a + ((co2_flux(Kwind, temp_h, salinity_h, x(5), x(9), x(7),wK))*area_h)*(60*60*24*365)/V_a;
+	dx(7)=LtoA_CO2flux/V_a + HtoA_CO2flux/V_a;
  else
  	%disp('Holding CO2 levels constant at initialised initial condition')
 	dx(7)=0;
@@ -59,8 +68,8 @@ dx(8)= T/V_l*x(10)-T/V_l*x(8)+T/V_l*KE_l*Rnp*x(3)- T/V_l*KE_l*Rcp*x(3)*Rpump*Ral
 dx(9)= T/V_h*x(8)+M/V_h*x(10)-M/V_h*x(9)-T/V_h*x(9)+T/V_h*KE_h*Rnp*x(1)+M/V_h*KE_h*Rnp*x(3); 
 dx(10)= T/V_d*x(9)+M/V_d*x(9)-M/V_d*x(10)-T/V_d*x(10)-T/V_d*KE_l*Rnp*x(3)-T/V_d*KE_h*Rnp*x(1)-M/V_d*KE_h*Rnp*x(3)+T/V_d*KE_l*Rcp*x(3)*Rpump*Ralk;
 %temperature
-dx(11)=0; % set LL surf temp
-dx(12)=0; % set HL surf temp
+dx(11)=(dT+temp_l)-x(11); % set LL surf temp
+dx(12)=(dT+temp_h)-x(12); % set HL surf temp
 dx(13)= T/V_d*x(12)+M/V_d*x(12)-M/V_d*x(13)-T/V_d*x(13);
 %salinity
 dx(14)=0; % set LL surf Sal
