@@ -40,7 +40,7 @@ Kwind=2/3600/24 ; % [m/s] piston velocity for air seas gas exchange///correspond
 
 dx=zeros(16,1);
 %PO4
-dx(1)= -T/V_l*x(1)+T/V_l*x(3)-T/V_l*x(3)*KE_l;
+dx(1)= -T/V_l*x(1) + T/V_l*x(3) - T/V_l*x(3)*KE_l;
 dx(2)= T/V_h*x(1)+M/V_h*x(3)-M/V_h*x(2)-T/V_h*x(2)-T/V_h*x(1)*KE_h-M/V_h*x(3)*KE_h;
 dx(3)= T/V_d*x(2)+M/V_d*x(2)-M/V_d*x(3)-T/V_d*x(3)+T/V_d*x(3)*KE_l+T/V_d*x(1)*KE_h+M/V_d*x(3)*KE_h;
 %DIC
@@ -55,7 +55,7 @@ if isnan(setCO2)
 	dx(7)=0;
 end
 % alkanity
-dx(8)= T/V_l*x(10)-T/V_l*x(8)+T/V_l*KE_l*Rnp*x(3)-T/V_l*KE_l*Rcp*x(3)*Rpump*Ralk; 
+dx(8)= T/V_l*x(10)-T/V_l*x(8)+T/V_l*KE_l*Rnp*x(3)- T/V_l*KE_l*Rcp*x(3)*Rpump*Ralk; 
 dx(9)= T/V_h*x(8)+M/V_h*x(10)-M/V_h*x(9)-T/V_h*x(9)+T/V_h*KE_h*Rnp*x(1)+M/V_h*KE_h*Rnp*x(3); 
 dx(10)= T/V_d*x(9)+M/V_d*x(9)-M/V_d*x(10)-T/V_d*x(10)-T/V_d*KE_l*Rnp*x(3)-T/V_d*KE_h*Rnp*x(1)-M/V_d*KE_h*Rnp*x(3)+T/V_d*KE_l*Rcp*x(3)*Rpump*Ralk;
 %temperature

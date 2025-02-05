@@ -1,4 +1,4 @@
-function finalstate = boxmodel4_function(KE_h,ALKmean,DICmean,wK, SSCSH, SSCO2) 
+function finalstate = boxmodel4_function(KE_h,ALKmean,DICmean,wK, SSCSH, SSCO2,tmax) 
 %%% to use the degree of nutrient concentration (KE_h) in the high-latitude box and impose a mean initial concentration for the whole ocean as for DIC and Alk
 %%% what represent SSCSH?
 
@@ -30,7 +30,7 @@ if isnan(SSCO2)
  if isnan(SSCSH)
  	disp('No CaCO3 compensation; closed-system')
   else
-  	disp('CaCO3 compensation with setCSH; open-system')
+  	fprintf('CaCO3 compensation with setCSH=%d; open-system\n',SSCSH)
   end
 
 ALK_ll_ini = ALKmean;
@@ -51,10 +51,28 @@ x0 = [PO4_ll_ini, PO4_hl_ini, PO4_d_ini, DIC_ll_ini, DIC_hl_ini,DIC_D_ini,pCO2_a
 %=================
 %SOLVING THE ODE
 %=================
-	tspan = (0:1:10000); %1000 years of simulation
+	tspan = (0:1:tmax); %1000 years of simulation
     [t,x] = ode45(@(t,x)CO2atm_ode(t,x,KE_h,wK,SSCSH,SSCO2),tspan,x0,[]);
-	finalstate = x;
+	finalstate = x(1:100:end,:);
 
+	V_tot   = 1.3e18*1027;              %Total ocean volume, m3
+	A_tot   = 1.3e18/3790;              %Ocean surface area, m2
+	mix_h   = 250 ;                     %Depth of mixed layer high lat ocean m
+	mix_l   = 100;                      %Depth of mixed layer low lat ocean m
+	area_h  = .15*A_tot;                %Area high lat ocean m2
+	area_l  = .85*A_tot;                %Area low lat ocean m2 
+	V_h     = area_h*mix_h*1027;         %Mass of high-latitude box (Area high is 15%) Kg (m3*1027Kg/m3)
+	V_l     = area_l*mix_l*1027;        %Mass of low-latitude box (Area low is 85%) Kg (m3*1027Kg/m3)
+	V_d     = (V_tot - V_h - V_l);
+	ALKmean = (V_l*finalstate(:,8) + V_h*finalstate(:,9) + V_d*finalstate(:,10))/V_tot;
+
+	N = length(finalstate(:,8));
+	CSH = zeros(N,1);
+	for id = 1:N
+		CSH(id) = carb_solver(finalstate(id,13),finalstate(id,16),finalstate(id,6), finalstate(id,10), 3000,wK);
+	end	
+	finalstate = [finalstate CSH ALKmean];
+	
 end
 
 
