@@ -5,7 +5,7 @@ if exist('spinupM','var')
 else
 	
 	%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%% START MODERN ENSEMBLE %%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
-
+	ex = 0:5;
 	fprintf('Running MODERN open-system spin-up\n')
 	% Determine deltaALKmean for modern open-system reference case
 	KE_h = 0.1;
@@ -22,7 +22,7 @@ else
 	fprintf('∆ALK= %d, CO2=%d, CSH=%d, T=%d\n\n',spinupM(end,18)-ALKmean , spinupM(end,7) , spinupM(end,17),spinupM(end,11)-273.15)
 
 	modernK_closed = {};
-	for polarPid = 0:10
+	for polarPid = ex
 		KE_h = 0.1*polarPid;
 		fprintf('Running MODERN/CLOSED experiment with KE_h=%d\n',KE_h)
 		ALKmean = 2364*10^-6 + deltaALK;%(mol/kg)
@@ -30,13 +30,13 @@ else
 		setSScsh = NaN; %set the desired steady state CSH depth for CaCO3 compensation; if NaN its closed-system CaCO3
 		setCO2 = NaN; % spin-up to a certain CO2; if NaN its closed-system CO2
 		Tfeedback = 0;
-		finalstate = boxmodel4_function(KE_h,ALKmean,DICmean,whichK,setSScsh,setCO2,Tfeedback,init_dT,10000);
+		finalstate = boxmodel4_function(KE_h,ALKmean,DICmean,whichK,setSScsh,setCO2,Tfeedback,init_dT,20000);
 		fprintf('∆ALK= %d, CO2=%d, CSH=%d, T=%d\n\n',finalstate(end,18)-ALKmean , finalstate(end,7) , finalstate(end,17),finalstate(end,11)-273.15)
 		modernK_closed{end+1} = finalstate;
 	end
 
 	modernK_open = {};
-	for polarPid = 0:10
+	for polarPid = ex
 		KE_h = 0.1*polarPid;
 		fprintf('Running MODERN/OPEN experiment with KE_h=%d\n',KE_h)
 		ALKmean = 2364*10^-6 + deltaALK;%(mol/kg)
@@ -44,13 +44,13 @@ else
 		setSScsh = 3000;
 		setCO2 = NaN; % spin-up to a certain CO2; if NaN its closed-system CO2
 		Tfeedback = 0;
-		finalstate = boxmodel4_function(KE_h,ALKmean,DICmean,whichK,setSScsh,setCO2,Tfeedback,init_dT,10000);
+		finalstate = boxmodel4_function(KE_h,ALKmean,DICmean,whichK,setSScsh,setCO2,Tfeedback,init_dT,20000);
 		fprintf('∆ALK= %d, CO2=%d, CSH=%d, T=%d\n\n',finalstate(end,18)-ALKmean , finalstate(end,7) , finalstate(end,17),finalstate(end,11)-273.15)
 		modernK_open{end+1} = finalstate;
 	end
 
 	modernK_open_Tfeed = {};
-	for polarPid = 0:10
+	for polarPid = ex
 		KE_h = 0.1*polarPid;
 		fprintf('Running MODERN/OPEN/TFEED experiment with KE_h=%d\n',KE_h)
 		ALKmean = 2364*10^-6 + deltaALK;%(mol/kg)
@@ -58,7 +58,7 @@ else
 		setSScsh = 3000;
 		setCO2 = NaN; % spin-up to a certain CO2; if NaN its closed-system CO2
 		Tfeedback = 1;
-		finalstate = boxmodel4_function(KE_h,ALKmean,DICmean,whichK,setSScsh,setCO2,Tfeedback,init_dT,10000);
+		finalstate = boxmodel4_function(KE_h,ALKmean,DICmean,whichK,setSScsh,setCO2,Tfeedback,init_dT,20000);
 		fprintf('∆ALK= %d, CO2=%d, CSH=%d, T=%d\n\n',finalstate(end,18)-ALKmean , finalstate(end,7) , finalstate(end,17),finalstate(end,11)-273.15)
 		modernK_open_Tfeed{end+1} = finalstate;
 	end
@@ -84,7 +84,7 @@ else
 	fprintf('∆ALK= %d, CO2=%d, CSH=%d, T=%d\n\n',spinupE(end,18)-ALKmean , spinupE(end,7) , spinupE(end,17),spinupE(end,11)-273.15)
 
 	eoceneK_closed = {};
-	for polarPid = 0:10
+	for polarPid = ex
 		KE_h = 0.1*polarPid;
 		fprintf('Running EOCENE/CLOSED experiment with KE_h=%d\n',KE_h)
 		ALKmean = 2364*10^-6 + deltaALK;%(mol/kg)
@@ -92,13 +92,13 @@ else
 		setSScsh = NaN; %set the desired steady state CSH depth for CaCO3 compensation; if NaN its closed-system CaCO3
 		setCO2 = NaN; % spin-up to a certain CO2; if NaN its closed-system CO2
 		Tfeedback = 0;
-		finalstate = boxmodel4_function(KE_h,ALKmean,DICmean,whichK,setSScsh,setCO2,Tfeedback,init_dT,10000);
+		finalstate = boxmodel4_function(KE_h,ALKmean,DICmean,whichK,setSScsh,setCO2,Tfeedback,init_dT,20000);
 		fprintf('∆ALK= %d, CO2=%d, CSH=%d, T=%d\n\n',finalstate(end,18)-ALKmean , finalstate(end,7) , finalstate(end,17),finalstate(end,11)-273.15)
-		modernK_closed{end+1} = finalstate;
+		eoceneK_closed{end+1} = finalstate;
 	end
 
 	eoceneK_open = {};
-	for polarPid = 0:10
+	for polarPid = ex
 		KE_h = 0.1*polarPid;
 		fprintf('Running EOCENE/OPEN experiment with KE_h=%d\n',KE_h)
 		ALKmean = 2364*10^-6 + deltaALK;%(mol/kg)
@@ -106,13 +106,13 @@ else
 		setSScsh = 3000;
 		setCO2 = NaN; % spin-up to a certain CO2; if NaN its closed-system CO2
 		Tfeedback = 0;
-		finalstate = boxmodel4_function(KE_h,ALKmean,DICmean,whichK,setSScsh,setCO2,Tfeedback,init_dT,10000);
+		finalstate = boxmodel4_function(KE_h,ALKmean,DICmean,whichK,setSScsh,setCO2,Tfeedback,init_dT,20000);
 		fprintf('∆ALK= %d, CO2=%d, CSH=%d, T=%d\n\n',finalstate(end,18)-ALKmean , finalstate(end,7) , finalstate(end,17),finalstate(end,11)-273.15)
 		eoceneK_open{end+1} = finalstate;
 	end
 
 	eoceneK_open_Tfeed = {};
-	for polarPid = 0:10
+	for polarPid = ex
 		KE_h = 0.1*polarPid;
 		fprintf('Running EOCENE/OPEN/TFEED experiment with KE_h=%d\n',KE_h)
 		ALKmean = 2364*10^-6 + deltaALK;%(mol/kg)
@@ -120,7 +120,7 @@ else
 		setSScsh = 3000;
 		setCO2 = NaN; % spin-up to a certain CO2; if NaN its closed-system CO2
 		Tfeedback = 1;
-		finalstate = boxmodel4_function(KE_h,ALKmean,DICmean,whichK,setSScsh,setCO2,Tfeedback,init_dT,10000);
+		finalstate = boxmodel4_function(KE_h,ALKmean,DICmean,whichK,setSScsh,setCO2,Tfeedback,init_dT,20000);
 		fprintf('∆ALK= %d, CO2=%d, CSH=%d, T=%d\n\n',finalstate(end,18)-ALKmean , finalstate(end,7) , finalstate(end,17),finalstate(end,11)-273.15)
 		eoceneK_open_Tfeed{end+1} = finalstate;
 	end
@@ -138,45 +138,53 @@ save('devrun')
 
 %%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%% COLLECT STEADY STATE OUTPUT %%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
 N = length(modernK_closed)
-MCC = zeros(N,4)
-MOC = zeros(N,4)
-MOT = zeros(N,4)
+MCC = zeros(N,5);
+MOC = zeros(N,5);
+MOT = zeros(N,5);
 
-ECC = zeros(N,4)
-EOC = zeros(N,4)
-EOT = zeros(N,4)
+ECC = zeros(N,5);
+EOC = zeros(N,5);
+EOT = zeros(N,5);
 
 for n = 1:N
-	n
-	MCC(1,1) = modernK_closed{n}(end,7); 			% CO2
-	MCC(1,2) = modernK_closed{n}(end,11)-273.15;	% Tll
-	MCC(1,3) = modernK_closed{n}(end,17);			% CSH
-	MCC(1,4) = modernK_closed{n}(end,18);			% ALKmean
+	MCC(n,1) = modernK_closed{n}(end,7); 			% CO2
+	MCC(n,2) = modernK_closed{n}(end,11)-273.15;	% Tll
+	MCC(n,3) = modernK_closed{n}(end,17);			% CSH
+	MCC(n,4) = modernK_closed{n}(end,18);			% ALKmean
+	MCC(n,5) = modernK_closed{n}(end,2);			% PO4
 	
-	MOC(1,1) = modernK_open{n}(end,7); 			% CO2
-	MOC(1,2) = modernK_open{n}(end,11)-273.15;	% Tll
-	MOC(1,3) = modernK_open{n}(end,17);			% CSH
-	MOC(1,4) = modernK_open{n}(end,18);			% ALKmean
 	
-	MOT(1,1) = modernK_open_Tfeed{n}(end,7); 			% CO2
-	MOT(1,2) = modernK_open_Tfeed{n}(end,11)-273.15;	% Tll
-	MOT(1,3) = modernK_open_Tfeed{n}(end,17);			% CSH
-	MOT(1,4) = modernK_open_Tfeed{n}(end,18);			% ALKmean
+	MOC(n,1) = modernK_open{n}(end,7); 			% CO2
+	MOC(n,2) = modernK_open{n}(end,11)-273.15;	% Tll
+	MOC(n,3) = modernK_open{n}(end,17);			% CSH
+	MOC(n,4) = modernK_open{n}(end,18);			% ALKmean
+	MOC(n,5) = modernK_open{n}(end,2);			% PO4
 	
-	ECC(1,1) = modernK_closed{n}(end,7); 			% CO2
-	ECC(1,2) = modernK_closed{n}(end,11)-273.15;	% Tll
-	ECC(1,3) = modernK_closed{n}(end,17);			% CSH
-	ECC(1,4) = modernK_closed{n}(end,18);			% ALKmean
 	
-	EOC(1,1) = modernK_open{n}(end,7); 			% CO2
-	EOC(1,2) = modernK_open{n}(end,11)-273.15;	% Tll
-	EOC(1,3) = modernK_open{n}(end,17);			% CSH
-	EOC(1,4) = modernK_open{n}(end,18);			% ALKmean
+	MOT(n,1) = modernK_open_Tfeed{n}(end,7); 			% CO2
+	MOT(n,2) = modernK_open_Tfeed{n}(end,11)-273.15;	% Tll
+	MOT(n,3) = modernK_open_Tfeed{n}(end,17);			% CSH
+	MOT(n,4) = modernK_open_Tfeed{n}(end,18);			% ALKmean
+	MOT(n,5) = modernK_open_Tfeed{n}(end,2);			% PO4
 	
-	EOT(1,1) = modernK_open_Tfeed{n}(end,7); 			% CO2
-	EOT(1,2) = modernK_open_Tfeed{n}(end,11)-273.15;	% Tll
-	EOT(1,3) = modernK_open_Tfeed{n}(end,17);			% CSH
-	EOT(1,4) = modernK_open_Tfeed{n}(end,18);			% ALKmean
+	ECC(n,1) = eoceneK_closed{n}(end,7); 			% CO2
+	ECC(n,2) = eoceneK_closed{n}(end,11)-273.15;	% Tll
+	ECC(n,3) = eoceneK_closed{n}(end,17);			% CSH
+	ECC(n,4) = eoceneK_closed{n}(end,18);			% ALKmean
+	ECC(n,5) = eoceneK_closed{n}(end,2);			% PO4
+	
+	EOC(n,1) = eoceneK_open{n}(end,7); 			% CO2
+	EOC(n,2) = eoceneK_open{n}(end,11)-273.15;	% Tll
+	EOC(n,3) = eoceneK_open{n}(end,17);			% CSH
+	EOC(n,4) = eoceneK_open{n}(end,18);			% ALKmean
+	EOC(n,5) = eoceneK_open{n}(end,2);			% PO4
+	
+	EOT(n,1) = eoceneK_open_Tfeed{n}(end,7); 			% CO2
+	EOT(n,2) = eoceneK_open_Tfeed{n}(end,11)-273.15;	% Tll
+	EOT(n,3) = eoceneK_open_Tfeed{n}(end,17);			% CSH
+	EOT(n,4) = eoceneK_open_Tfeed{n}(end,18);			% ALKmean
+	EOT(n,5) = eoceneK_open_Tfeed{n}(end,2);			% PO4
+	
 end
 	
 	
@@ -184,14 +192,23 @@ end
 
 
 %%% quickplot
-if (0)
-	finalstate = spinupE;
+if (1)
+	
+	
+	h = figure;
+	for p = 1:4
+		subplot(2,2,p)
+		hold on
+		plot(MCC(:,5),MCC(:,p),"o-",'color','b')
+		plot(MOC(:,5),MOC(:,p),"o--",'color','b')
+		plot(MOT(:,5),MOT(:,p),"o:",'color','b')
 
+		plot(ECC(:,5),ECC(:,p),"o-",'color','r')
+		plot(EOC(:,5),EOC(:,p),"o--",'color','r')
+		plot(EOT(:,5),EOT(:,p),"o:",'color','r')
+
+	end
 	
-	
-	h          = figure;
-	subplot(3,2,1)
-	plot(finalstate(:,7)*1000000) %pCO2
 
 	
 
