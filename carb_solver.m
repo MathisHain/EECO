@@ -160,6 +160,7 @@ for i = 1:nt % see table 8.2.1 in Sarmiento&Gruber. To solve H+ using an iterati
     
     if (abs(guessed-ALK) < 10^-7)
 		pH = PH_firstguess;
+		H = 10^(-PH_firstguess);
       break
     elseif (guessed-ALK < 0)
         PH_firstguess = PH_firstguess + 0.001;
@@ -168,7 +169,7 @@ for i = 1:nt % see table 8.2.1 in Sarmiento&Gruber. To solve H+ using an iterati
         PH_firstguess = PH_firstguess - 0.001;
         H = 10^(-PH_firstguess);
     end  
-    
+end    
 % Once H+ has been solved, we can calculate pCO2 from DIC and H+ as follow (see
 % table 8.2.1 in Sarmiento&Gruber
 % dO/O = dKsCd/KsCd/dz * dCSH = (+1.8%/100m) *dCSH
@@ -181,4 +182,3 @@ CO3 = DIC*(K1d*K2d/(H^2+K1d*H+K1d*K2d));
 Ozd = Ca*CO3/KspCd;
 CSH = Depth + log(Ozd)/dlogKsp_dz;
 %printf(Ozd,CSH)
-end

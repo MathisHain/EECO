@@ -1,5 +1,5 @@
 clear
-%load('devrun')
+load('devrun')
 if exist('spinupM','var')
 	fprintf('REUSING OUTPUT DATA ==> SAVES TIME\n')
 else

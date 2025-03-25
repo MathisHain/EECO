@@ -19,12 +19,15 @@ DIC_ll_ini = DICmean;%(mol/kg)1924*10^-6%%%%3000*10^-6
 DIC_hl_ini = DICmean;%(mol/kg)2149*10^-6%%%%3351*10^-6
 DIC_D_ini  = DICmean;%(mol/kg)2240*10^-6%%%%3493*10^-6
 
-if isnan(SSCO2)
+if isnan(SSCO2) & wK == "modern"
 	disp('Using default initial CO2=280ppm')
-	 pCO2_a_ini = 280*10^-6 ;%(atm))
+	pCO2_a_ini = 280*10^-6 ;%(atm))
+elseif isnan(SSCO2) & wK == "Eocene"
+	disp('Using Eocene initial CO2=800ppm')
+	pCO2_a_ini = 800*10^-6 ;%(atm))
  else
  	disp('Using set CO2 level')
- 	 pCO2_a_ini = SSCO2*10^-6 ;%(atm))
+ 	pCO2_a_ini = SSCO2*10^-6 ;%(atm))
  end
  
  if isnan(SSCSH)
@@ -65,13 +68,14 @@ x0 = [PO4_ll_ini, PO4_hl_ini, PO4_d_ini, DIC_ll_ini, DIC_hl_ini,DIC_D_ini,pCO2_a
 	V_l     = area_l*mix_l*1027;        %Mass of low-latitude box (Area low is 85%) Kg (m3*1027Kg/m3)
 	V_d     = (V_tot - V_h - V_l);
 	ALKmean = (V_l*finalstate(:,8) + V_h*finalstate(:,9) + V_d*finalstate(:,10))/V_tot;
+	DICmean = (V_l*finalstate(:,4) + V_h*finalstate(:,5) + V_d*finalstate(:,6))/V_tot;
 
 	N = length(finalstate(:,8));
 	CSH = zeros(N,1);
 	for id = 1:N
 		CSH(id) = carb_solver(finalstate(id,13),finalstate(id,16),finalstate(id,6), finalstate(id,10), 3000,wK);
 	end	
-	finalstate = [finalstate CSH ALKmean];
+	finalstate = [finalstate CSH ALKmean DICmean];
 	
 end
 

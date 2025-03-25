@@ -19,17 +19,18 @@ else
 	setCO2 = 800; % spin-up to a certain CO2; if NaN its closed-system CO2300*10^-6
 	Tfeedback = 1;
 	init_dT = 0;
-	spinupE = boxmodel4_function(KE_h,ALKmean,DICmean,whichK,setSScsh,setCO2,Tfeedback,init_dT,50000);
+	spinupE = boxmodel4_function(KE_h,ALKmean,DICmean,whichK,setSScsh,setCO2,Tfeedback,init_dT,100000);
 	deltaALK=spinupE(end,18)-ALKmean;
+	deltaDIC=spinupE(end,19)-DICmean;
 	init_dT = spinupE(end,11)-273.15-25;
-	fprintf('∆ALK= %d, CO2=%d, CSH=%d, T=%d\n\n',spinupE(end,18)-ALKmean , spinupE(end,7) , spinupE(end,17),spinupE(end,11)-273.15)
+	fprintf('∆ALK= %d, ∆DIC= %d, CO2=%d, CSH=%d, T=%d\n\n',spinupE(end,18)-ALKmean , spinupE(end,19)-DICmean , spinupE(end,7) , spinupE(end,17),spinupE(end,11)-273.15)
 
 	eoceneK_closed = {};
 	for polarPid = ex
 		KE_h = 0.9-0.1*polarPid;
 		fprintf('Running EOCENE/CLOSED experiment with KE_h=%d\n',KE_h)
 		ALKmean = 2364*10^-6 + deltaALK;%(mol/kg)
-		DICmean = 2255*10^-6 + deltaALK/2;%(mol/kg)
+		DICmean = 2255*10^-6 + deltaDIC;%(mol/kg)
 		setSScsh = NaN; %set the desired steady state CSH depth for CaCO3 compensation; if NaN its closed-system CaCO3
 		setCO2 = NaN; % spin-up to a certain CO2; if NaN its closed-system CO2
 		Tfeedback = 0;
@@ -43,7 +44,7 @@ else
 		KE_h = 0.9-0.1*polarPid;
 		fprintf('Running EOCENE/CLOSED/TFEED experiment with KE_h=%d\n',KE_h)
 		ALKmean = 2364*10^-6 + deltaALK;%(mol/kg)
-		DICmean = 2255*10^-6 + deltaALK/2;%(mol/kg)
+		DICmean = 2255*10^-6 + deltaDIC;%(mol/kg)
 		setSScsh = NaN; %set the desired steady state CSH depth for CaCO3 compensation; if NaN its closed-system CaCO3
 		setCO2 = NaN; % spin-up to a certain CO2; if NaN its closed-system CO2
 		Tfeedback = 1;
@@ -57,11 +58,11 @@ else
 		KE_h = 0.9-0.1*polarPid;
 		fprintf('Running EOCENE/OPEN/TFEED experiment with KE_h=%d\n',KE_h)
 		ALKmean = 2364*10^-6 + deltaALK;%(mol/kg)
-		DICmean = 2255*10^-6 + deltaALK/2;%(mol/kg)
+		DICmean = 2255*10^-6 + deltaDIC;%(mol/kg)
 		setSScsh = 3000;
 		setCO2 = NaN; % spin-up to a certain CO2; if NaN its closed-system CO2
 		Tfeedback = 1;
-		finalstate = boxmodel4_function(KE_h,ALKmean,DICmean,whichK,setSScsh,setCO2,Tfeedback,init_dT,20000);
+		finalstate = boxmodel4_function(KE_h,ALKmean,DICmean,whichK,setSScsh,setCO2,Tfeedback,init_dT,50000);
 		fprintf('∆ALK= %d, CO2=%d, CSH=%d, T=%d\n\n',finalstate(end,18)-ALKmean , finalstate(end,7) , finalstate(end,17),finalstate(end,11)-273.15)
 		eoceneK_open_Tfeed{end+1} = finalstate;
 	end

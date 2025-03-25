@@ -46,7 +46,7 @@ c = 11.88*10^(-6);%11.88*10^(-6)% not the same as in Sarmiento&Gruber, c = 1.185
 nt=10000;
 
 
-PH_firstguess = 6.0;
+PH_firstguess = 8.0;
 H = 10^(-PH_firstguess); % mol kg-1 
 
 for i = 1:nt % see table 8.2.1 in Sarmiento&Gruber. To solve H+ using an iterative approach. 
@@ -54,7 +54,8 @@ for i = 1:nt % see table 8.2.1 in Sarmiento&Gruber. To solve H+ using an iterati
     guessed = DIC/(H/K1+1+K2/H)+2*(DIC/(H^2/(K1*K2)+H/K2+1))+Kw/H-H+Kb*c*S/(H+Kb)  ;  % mol kg-1  to see table 
     
     if (abs(guessed-ALK) < 10^-6)
-      break
+        H = 10^(-PH_firstguess);
+		break
     elseif (guessed-ALK < 0)
         PH_firstguess = PH_firstguess + 0.001;
         H = 10^(-PH_firstguess);
@@ -66,8 +67,8 @@ for i = 1:nt % see table 8.2.1 in Sarmiento&Gruber. To solve H+ using an iterati
 % Once H+ has been solved, we can calculate pCO2 from DIC and H+ as follow (see
 % table 8.2.1 in Sarmiento&Gruber
     
+end
 pco2=DIC/K0*(H^2/(H^2+K1*H+K1*K2)); %atm and 280ppm = 280µatm
 
 
 phico2 = -K0*Kwind*(pco2_a-pco2)*1000; %mol m-2 s-1
-end
